@@ -15,6 +15,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
+    console.log("handler called");
     await ensureDbConnected()
     const { username, password } = req.body;
     const admin = await Admin.findOne({ username });

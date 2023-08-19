@@ -14,6 +14,7 @@
     "@types/node": "20.5.1",
     "@types/react": "18.2.20",
     "@types/react-dom": "18.2.7",
+    "axios": "^1.4.0",
     "db": "*",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.3",
