@@ -7,6 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+  Todo     Todo[]
+}
+
 model Todo {
   id          Int     @id @default(autoincrement())
   title       String
@@ -14,11 +21,4 @@ model Todo {
   done        Boolean @default(false)
   userId      Int
   User        User    @relation(fields: [userId], references: [id])
-}
-
-model User {
-  id       Int    @id @default(autoincrement())
-  username String @unique
-  password String
-  Todo     Todo[]
 }
