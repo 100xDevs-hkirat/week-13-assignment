@@ -12,6 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@types/mongoose": "^5.11.97",
-    "mongoose": "^7.4.3"
+    "mongoose": "^7.4.3",
+    "prisma": "^5.2.0",
+    "save-dev": "^0.0.1-security"
   }
 }
