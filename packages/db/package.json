@@ -1,0 +1,14 @@
+{
+  "name": "db",
+  "version": "0.0.0",
+  "dependencies": {
+    "@prisma/client": "^5.2.0"
+  }, 
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push --skip-generate "
+  },
+  "devDependencies": {
+    "prisma": "^5.2.0"
+  }
+}
