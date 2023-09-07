@@ -3,7 +3,7 @@ import { authState } from '../store/authState.js';
 import {useRecoilValue} from "recoil";
 
 interface Todo {
-    _id: string;
+    id: string;
     title: string;
     description: string;
     done: boolean;
@@ -52,7 +52,8 @@ const TodoList = () => {
             headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
         });
         const updatedTodo = await response.json();
-        setTodos(todos.map((todo) => (todo._id === updatedTodo._id ? updatedTodo : todo)));
+        const newTodos=todos.map((todo) => (todo.id === updatedTodo.id ? updatedTodo : todo));
+        setTodos(newTodos);
     };
 
     return (
@@ -72,10 +73,10 @@ const TodoList = () => {
             <button onClick={addTodo}>Add Todo</button>
 
             {todos.map((todo) => (
-                <div key={todo._id}>
+                <div key={todo.id}>
                     <h3>{todo.title}</h3>
                     <p>{todo.description}</p>
-                    <button onClick={() => markDone(todo._id)}>{todo.done ? 'Done' : 'Mark as Done'}</button>
+                    <button onClick={() => markDone(todo.id)}>{todo.done ? 'Done' : 'Mark as Done'}</button>
                 </div>
             ))}
         </div>
