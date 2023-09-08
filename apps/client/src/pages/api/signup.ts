@@ -9,7 +9,7 @@ const SECRET = "SECRET";
 type Data = {
   token?: string;
   message?: string;
-  name?: string;
+  name?: string
 }
 
 export default async function handler(
