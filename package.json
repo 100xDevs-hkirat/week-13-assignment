@@ -11,7 +11,7 @@
     "eslint": "^7.32.0",
     "eslint-config-custom": "*",
     "prettier": "^2.5.1",
-    "turbo": "latest"
+    "turbo": "1.10.4"
   },
   "name": "week-11-class",
   "packageManager": "npm@7.24.2",
