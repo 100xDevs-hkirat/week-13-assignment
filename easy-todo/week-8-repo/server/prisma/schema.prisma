@@ -18,6 +18,7 @@ model User {
 }
 
 model Todo {
+  id          Int     @id @default(autoincrement())
   title       String  @unique
   description String
   done        Boolean
