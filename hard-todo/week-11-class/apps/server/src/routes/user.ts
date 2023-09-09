@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import express, { Request, Response } from "express";
-import { userTypes } from "types";
+import { userTypes } from "common";
 import jwt from "jsonwebtoken";
 import { SECRET, authenticateJwt } from "../middleware/auth";
 import { User } from "db";

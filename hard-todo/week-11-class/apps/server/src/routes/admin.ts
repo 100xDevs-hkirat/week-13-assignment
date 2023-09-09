@@ -1,7 +1,7 @@
 import express, { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import { SECRET, authenticateJwt } from "../middleware/auth";
-import { adminTypes, courseTypes } from "types";
+import { adminTypes, courseTypes } from "common";
 import { Prisma, PrismaClient } from "@prisma/client";
 export const router = express.Router();
 
@@ -94,7 +94,7 @@ router.post("/login", async (req: Request, res: Response) => {
   await prisma.$disconnect();
 });
 
-router.get("/courses", authenticateJwt, async (req: Request, res: Response) => {
+router.post("/courses", authenticateJwt, async (req: Request, res: Response) => {
   const parsedInput = courseTypes.safeParse(req.body);
   if (!parsedInput.success) {
     return res.status(411).json({ error: parsedInput.error });
@@ -112,6 +112,7 @@ router.get("/courses", authenticateJwt, async (req: Request, res: Response) => {
       courseId: newCourse.id,
     });
   } catch (e) {
+    console.log(e)
     res.status(404).json({ message: "db error" });
   }
 });
