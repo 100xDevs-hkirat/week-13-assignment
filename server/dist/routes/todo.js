@@ -17,7 +17,7 @@ const index_1 = __importDefault(require("../middleware/index"));
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const router = express_1.default.Router();
-router.post("/addTodo", index_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/todos", index_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description } = req.body;
     const user = yield prisma.user.findUnique({
         where: {
@@ -42,6 +42,7 @@ router.put("/updateTodo/:todoId", index_1.default, (req, res) => __awaiter(void 
     const { todoId } = req.params;
     const newTodo = yield prisma.todo.update({
         where: {
+            authorId: Number(req.headers.userId),
             id: Number(todoId)
         },
         data: {
@@ -56,18 +57,19 @@ router.delete("/deleteTodo/:todoId", index_1.default, (req, res) => __awaiter(vo
     const { todoId } = req.params;
     const deleteTodo = yield prisma.todo.delete({
         where: {
+            authorId: Number(req.headers.userId),
             id: Number(todoId)
         }
     });
-    res.status(200).json({ deleteTodo });
+    res.status(200).json({ message: "deleted todo" });
 }));
-router.get("/getTodo", index_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/todos", index_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.headers.userId;
     const todoList = yield prisma.todo.findMany({
         where: {
             authorId: Number(userId)
         }
     });
-    res.status(200).json(todoList);
+    res.status(200).json({ todoList });
 }));
 exports.default = router;

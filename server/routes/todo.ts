@@ -6,7 +6,7 @@ import { Request, Response } from 'express';
 const prisma = new PrismaClient();
 const router = express.Router();
 
-router.post("/addTodo", auth, async (req:Request, res:Response) => {
+router.post("/todos", auth, async (req:Request, res:Response) => {
     const { title, description } = req.body;
     const user = await prisma.user.findUnique({ 
         where: { 
@@ -33,6 +33,7 @@ router.put("/updateTodo/:todoId", auth, async (req, res) => {
     const {todoId} = req.params;
     const newTodo = await prisma.todo.update({ 
         where:{
+            authorId:Number(req.headers.userId),
             id:Number(todoId)
         },
         data: { 
@@ -48,19 +49,20 @@ router.delete("/deleteTodo/:todoId", auth, async(req, res) => {
     const {todoId} = req.params;
     const deleteTodo = await prisma.todo.delete({
         where:{
+            authorId:Number(req.headers.userId),
             id:Number(todoId)
         }
     })
     res.status(200).json({message:"deleted todo"});
 })
-router.get("/getTodo", auth, async(req, res) => {
+router.get("/todos", auth, async(req, res) => {
     const userId = req.headers.userId;
     const todoList = await prisma.todo.findMany({
         where:{
             authorId:Number(userId)
         }
     });
-    res.status(200).json(todoList);
+    res.status(200).json({todoList});
 })
 
 export default router;

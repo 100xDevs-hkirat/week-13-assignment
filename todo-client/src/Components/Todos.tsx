@@ -1,14 +1,34 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 
+interface Todo{
+    id:number,
+    title:string,
+    description:string,
+    complete?:boolean
+}
+type todoArray = Todo[];
+
 export default function Todos() {
+    const [todoList, setTodoList] = useState<todoArray>([]);
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
-    const [complete, setComplete] = useState(false);
+    
+    useEffect(() => {
+        const fetchTodos = async () => {
+            const response = await axios.get('http://localhost:3000/todo/todos', {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('token')
+                }
+            });
+            setTodoList(response.data.todoList);
+        }
+        fetchTodos()
+    },[]);
 
-    function createHandler() {
-        () => {
-            axios.post('http://localhost:3000/todo/createTodo', {
+    const addTodo =() => {
+        async () => {
+            const response = await axios.post('http://localhost:3000/todo/todos', {
                 title,
                 description
             }, {
@@ -16,39 +36,25 @@ export default function Todos() {
                     "Content-Type": "application/json",
                     "token": "Bearer " + localStorage.getItem('token')
                 }
-            })
+            });
+            const data = response.data;
+            const newTodos = [];
+            for(let i=0;todoList.length;i++){
+                newTodos.push(todoList[i]);
+            }
+            newTodos.push(data);
+            setTodoList(newTodos);
         }
     }
-    function deleteHandler() {
-        axios.delete('http://localhost:3000/todo/deleteTodo/:todoId', {
-            headers: {
-                "content-type": "application/json",
-                "token": "Bearer " + localStorage.getItem('token')
-            }
-        }).then((response) => {
+   
 
-        });
-    }
-    function updateHandler() {
-        axios.put('http://localhost:3000/todo/updateTodo', {
-            title,
-            description
-        }, {
-            headers: {
-                "content-type": "application/json",
-                "token": "Bearer " + localStorage.getItem('token')
-            }
-        }).then((response) => {
-
-        });
-    }
-    return (<>
-        <h2>Welcome</h2>
-        <h2>Todo List</h2>
-        <input type="text" placeholder='Title' onChange={(e) => setTitle(e.target.value)} />
-        <input type="text" placeholder='Description' onChange={(e) => setDescription(e.target.value)} />
-        <button onClick={createHandler}>Add todo</button>
-        <button onClick={deleteHandler}>Delete todo</button>
-        <button onClick={updateHandler}>Update todo</button>
-    </>);
+    return (
+        todoList.map((todo) =>
+            <div key={todo.id}>
+                <h1>{todo.title}</h1>
+                <h2>{todo.description}</h2>
+                
+            </div>));
 }
+
+
