@@ -163,7 +163,7 @@ exports.router.put("/courses/:courseId", auth_1.authenticateJwt, (req, res) => _
 exports.router.get("/courses", auth_1.authenticateJwt, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const prisma = new client_1.PrismaClient();
     try {
-        const courses = prisma.course.findMany({});
+        const courses = yield prisma.course.findMany();
         res.json({ courses });
     }
     catch (e) {

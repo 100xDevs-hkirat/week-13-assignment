@@ -153,7 +153,7 @@ router.put(
 router.get("/courses", authenticateJwt, async (req: Request, res: Response) => {
   const prisma = new PrismaClient();
   try {
-    const courses = prisma.course.findMany({});
+    const courses = await prisma.course.findMany();
     res.json({ courses });
   } catch (e) {
     console.log(e);

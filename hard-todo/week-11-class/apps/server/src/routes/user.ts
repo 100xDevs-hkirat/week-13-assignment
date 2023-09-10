@@ -1,6 +1,6 @@
 import { Prisma, PrismaClient } from "@prisma/client";
 import express, { Request, Response } from "express";
-import { userTypes } from "common";
+import { courseTypes, userTypes } from "common";
 import jwt from "jsonwebtoken";
 import { SECRET, authenticateJwt } from "../middleware/auth";
 import { User } from "db";
@@ -25,6 +25,12 @@ router.post("/signup", async (req: Request, res: Response) => {
     } else {
       const token = jwt.sign({ username, role: "user" }, SECRET, {
         expiresIn: "1h",
+      });
+      const newUser = await prisma.user.create({
+        data: {
+          username,
+          password,
+        },
       });
       res.status(200).json({ message: "User registered successfully", token });
     }
@@ -87,42 +93,35 @@ router.post(
     const prisma = new PrismaClient();
     try {
       const course = await prisma.course.findUnique({
-        where: {
-          id: courseId,
-        },
+        where: { id: courseId },
       });
       if (course) {
-        if (req.headers["username"] === "string") {
+        if (typeof req.headers["username"] === "string") {
           const username: string = req.headers["username"];
-          const user = await prisma.user.findUnique({
-            where: {
-              username,
-            },
-          });
+          const user = await prisma.user.findUnique({ where: { username } });
           if (user) {
+            user.purchasedCourses.push(courseId);
             const updatedUser = await prisma.user.update({
               where: {
-                id: user.id,
+                username,
               },
               data: {
-                purchasedCourses: {
-                  create: {
-                    ...course,
-                  },
-                },
+                purchasedCourses: user.purchasedCourses,
               },
             });
             if (updatedUser) {
-              res.json({ message: "Course purchased successfully" });
+              res
+                .status(200)
+                .json({ message: "Course purchased successfully" });
             } else {
               res.status(403).json({ message: "User not found" });
             }
           } else {
             res.status(403).json({ message: "User not found" });
           }
-        } else {
-          res.status(403).json({ message: "Course not found" });
         }
+      } else {
+        res.status(403).json({ message: "Course not found" });
       }
     } catch (e) {
       console.log(e);
@@ -140,14 +139,16 @@ router.get(
       const username = req.headers["username"];
       const prisma = new PrismaClient();
       try {
-        const user = await prisma.user.findUnique({
-          where: { username },
-          include: {
-            purchasedCourses: true,
-          },
-        });
+        const user = await prisma.user.findUnique({ where: { username } });
         if (user) {
-          res.json({ purchasedCourses: user.purchasedCourses });
+          const purchasedCourses = [];
+          for (let i = 0; i < user.purchasedCourses.length; ++i) {
+            const course = await prisma.course.findUnique({
+              where: { id: user.purchasedCourses[i] },
+            });
+            purchasedCourses.push(course);
+          }
+          res.json({ purchasedCourses: purchasedCourses });
         } else {
           res.status(403).json({ message: "User not found" });
         }

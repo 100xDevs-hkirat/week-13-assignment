@@ -20,10 +20,10 @@ model Admin {
 }
 
 model User {
-  id               Int      @id @default(autoincrement())
-  username         String   @unique
+  id               Int    @id @default(autoincrement())
+  username         String @unique
   password         String
-  purchasedCourses Course[]
+  purchasedCourses Int[] // stores the ids of purchased courses
 }
 
 model Course {
@@ -33,5 +33,4 @@ model Course {
   price       Float
   imageLink   String
   published   Boolean
-  user        User    @relation(fields: [id], references: [id])
 }
