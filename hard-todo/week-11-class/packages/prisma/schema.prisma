@@ -1,0 +1,36 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+generator erd {
+  provider = "prisma-erd-generator"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Admin {
+  id       Int    @id @default(autoincrement())
+  username String @unique
+  password String
+}
+
+model User {
+  id               Int    @id @default(autoincrement())
+  username         String @unique
+  password         String
+  purchasedCourses Int[] // stores the ids of purchased courses
+}
+
+model Course {
+  id          Int     @id @default(autoincrement())
+  title       String  @unique
+  description String
+  price       Float
+  imageLink   String
+  published   Boolean
+}
