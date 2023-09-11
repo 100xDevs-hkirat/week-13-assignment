@@ -1,3 +1,2 @@
-.env.*
-test.ts
-test.js
+.env
+test.*

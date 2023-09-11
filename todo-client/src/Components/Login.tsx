@@ -1,10 +1,7 @@
 import { useState } from "react";
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
-import dotenv from 'dotenv';
-dotenv.config();
+import { Link, useNavigate } from "react-router-dom";
 
-const PORT = process.env.PORT;
 export default function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -12,7 +9,7 @@ export default function Login() {
     const navigate = useNavigate();
     function onClickHandler() {
 
-        axios.post(`http://localhost:${PORT}/user/login`, {
+        axios.post(`http://localhost:3001/user/login`, {
             username,
             password
         }, {
@@ -20,10 +17,12 @@ export default function Login() {
                 'Content-Type': 'application/json'
             }
         }).then((response) => {
+            
             localStorage.setItem('token', response.data.token);
             navigate('/todos')
         }).catch((e) => {
             alert(e.response.data.message);
+            
         })
     }
     return (
@@ -33,7 +32,7 @@ export default function Login() {
                 <h2 >Login</h2>
                 <input type="text" placeholder='Username' onChange={(e) => setUsername(e.target.value)} />
                 <input type="password" placeholder='Password' onChange={(e) => setPassword(e.target.value)} />
-                <span>New here? <a href='/signup'>Signup</a></span>
+                <span>New here? <Link to='/signup'>Signup</Link></span>
                 <button onClick={onClickHandler}>Login</button>
             </div>
         </div>

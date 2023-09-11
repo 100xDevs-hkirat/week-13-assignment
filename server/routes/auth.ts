@@ -10,10 +10,10 @@ const SECRET = process.env.SECRET || "";
 
 router.post('/signup', async (req, res) => {
     const { username, password } = req.body;
-    const user = await prisma.user.findUnique({ 
-        where: { 
-            username: username 
-        } 
+    const user = await prisma.user.findUnique({
+        where: {
+            username: username
+        }
     });
     if (user) {
         return res.status(403).json({ message: 'User already exists' });
@@ -24,7 +24,7 @@ router.post('/signup', async (req, res) => {
                 password
             }
         });
-        const token = jwt.sign({ id: newUser.id }, SECRET, { expiresIn: '1h' });
+        const token = jwt.sign({ username: username }, SECRET, { expiresIn: '1h' });
         res.json({ message: 'User created successfully', token });
     }
 
@@ -35,10 +35,10 @@ router.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const user = await prisma.user.findUnique({
         where: {
-           
-                username:username,
-                password:password
-            
+
+            username: username,
+            password: password
+
         }
     });
     if (!user) {
@@ -52,10 +52,10 @@ router.post('/login', async (req, res) => {
 
 router.get('/me', auth, async (req, res) => {
 
-    const user = await prisma.user.findUnique({ 
-        where: { 
-            id: req.headers.userId 
-        } 
+    const user = await prisma.user.findUnique({
+        where: {
+            id: req.headers.userId
+        }
     });
     if (user) {
         res.json({ username: user.username });

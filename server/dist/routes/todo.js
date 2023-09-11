@@ -17,7 +17,7 @@ const index_1 = __importDefault(require("../middleware/index"));
 const client_1 = require("@prisma/client");
 const prisma = new client_1.PrismaClient();
 const router = express_1.default.Router();
-router.post("/todos", index_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.post("/addTodo", index_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { title, description } = req.body;
     const user = yield prisma.user.findUnique({
         where: {
@@ -36,33 +36,6 @@ router.post("/todos", index_1.default, (req, res) => __awaiter(void 0, void 0, v
     });
     res.status(201).json(newTodo);
 }));
-router.put("/updateTodo/:todoId", index_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { title, description, complete } = req.body;
-    console.log(title, description, complete);
-    const { todoId } = req.params;
-    const newTodo = yield prisma.todo.update({
-        where: {
-            authorId: Number(req.headers.userId),
-            id: Number(todoId)
-        },
-        data: {
-            title,
-            description,
-            complete
-        }
-    });
-    res.status(200).json(newTodo);
-}));
-router.delete("/deleteTodo/:todoId", index_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { todoId } = req.params;
-    const deleteTodo = yield prisma.todo.delete({
-        where: {
-            authorId: Number(req.headers.userId),
-            id: Number(todoId)
-        }
-    });
-    res.status(200).json({ message: "deleted todo" });
-}));
 router.get("/todos", index_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.headers.userId;
     const todoList = yield prisma.todo.findMany({
@@ -71,5 +44,21 @@ router.get("/todos", index_1.default, (req, res) => __awaiter(void 0, void 0, vo
         }
     });
     res.status(200).json({ todoList });
+}));
+router.delete("/:todoId", index_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        console.log("delete");
+        const { todoId } = req.params;
+        yield prisma.todo.delete({
+            where: {
+                id: Number(todoId),
+                authorId: Number(req.headers["userId"])
+            },
+        });
+        res.status(200).json({ "message": "delete done!" });
+    }
+    catch (e) {
+        res.status(403).json({ "message": "delete unsuccessful!" });
+    }
 }));
 exports.default = router;

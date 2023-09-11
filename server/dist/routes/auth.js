@@ -36,7 +36,7 @@ router.post('/signup', (req, res) => __awaiter(void 0, void 0, void 0, function*
                 password
             }
         });
-        const token = jsonwebtoken_1.default.sign({ id: newUser.id }, SECRET, { expiresIn: '1h' });
+        const token = jsonwebtoken_1.default.sign({ username: username }, SECRET, { expiresIn: '1h' });
         res.json({ message: 'User created successfully', token });
     }
 }));
@@ -64,6 +64,20 @@ router.get('/me', index_1.default, (req, res) => __awaiter(void 0, void 0, void 
     });
     if (user) {
         res.json({ username: user.username });
+    }
+    else {
+        res.status(403).json({ message: 'User not logged in' });
+    }
+}));
+router.get('/allTodos', index_1.default, (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const user = yield prisma.user.findUnique({
+        where: {
+            id: req.headers.userId
+        }
+    });
+    if (user) {
+        console.log(user.todoList);
+        res.json({ todos: user.todoList });
     }
     else {
         res.status(403).json({ message: 'User not logged in' });
