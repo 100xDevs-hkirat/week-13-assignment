@@ -28,8 +28,8 @@ export default function Signup() {
     }
     return (
         <div style={{ display: "flex", justifyContent: "center", marginTop: "10rem" }}>
-            <div>
-                <div className="shadow-md rounded px-8 pt-6 pb-8 mb-4">
+            
+                <div className="bg-green-300 shadow-md rounded px-8 pt-6 pb-8 mb-4">
                     <h1 className="text-green-600 text-5xl font-bold ">Welcome to Todo App</h1>
 
                     <div className="mb-4">
@@ -47,7 +47,7 @@ export default function Signup() {
                     <span className="text-blue-600/75 hover:text-blue-800">Already signed up? <Link to='/login'>Login</Link></span> <br />
                     <button className="justify-content:center bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700" onClick={onClickHandler}>Sign up</button>
                 </div>
-            </div>
+           
         </div>
     );
 

@@ -45,7 +45,7 @@ export default function Todos() {
             setTitle("");
             setDescription("")
             const newTodo = response.data;
-            console.log("Todo added!")
+            alert("Todo added!")
             setTodoList([...todoList, newTodo]);
 
 
@@ -88,7 +88,7 @@ export default function Todos() {
                 </>) : <></>}
 
             </div>
-            <form className="container mx-auto w-80 bg-gray-200 shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-16">
+            <div className="container mx-auto w-80 bg-green-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-16">
                 <div>
                     <div className="mb-4">
                         <label className="block text-gray-700 text-sm font-bold mb-2" >
@@ -117,6 +117,6 @@ export default function Todos() {
                         </div>
                     </div>
                 )}
-            </form>
+            </div>
         </div>);
 }

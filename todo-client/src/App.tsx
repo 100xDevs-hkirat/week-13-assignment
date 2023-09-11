@@ -7,7 +7,6 @@ import InitUser from "./Components/InitUser";
 
 function App() {
   return (
-
     <>
     <InitUser />
       <Routes>
